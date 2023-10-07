@@ -21,16 +21,21 @@ class CupertinoTabBarExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const tabBarTitle = 'ListView';
     return CupertinoTabScaffold(
       tabBar: CupertinoTabBar(
+        border: Border.all(
+          color: CupertinoColors.systemRed,
+          width: 1.5,
+        ),
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.square_list),
-            label: 'List',
+            label: tabBarTitle,
           ),
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.square_list),
-            label: 'List',
+            label: tabBarTitle,
           ),
         ],
       ),
@@ -40,8 +45,12 @@ class CupertinoTabBarExample extends StatelessWidget {
             return NestedScrollView(
               headerSliverBuilder: (context, innerBoxIsScrolled) {
                 return [
-                  const CupertinoSliverNavigationBar(
-                    largeTitle: Text('List'),
+                  CupertinoSliverNavigationBar(
+                    largeTitle: const Text(tabBarTitle),
+                    border: Border.all(
+                      color: CupertinoColors.systemRed,
+                      width: 1.5,
+                    ),
                   )
                 ];
               },
@@ -51,10 +60,16 @@ class CupertinoTabBarExample extends StatelessWidget {
                       notification.metrics.maxScrollExtent);
                 },
                 child: ListView.builder(
-                  itemCount: 100,
+                  itemCount: 20,
                   itemBuilder: (context, itemIndex) {
-                    return SizedBox(
-                      width: _columnWidth(context),
+                    return Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: CupertinoColors.systemRed,
+                          width: 1.5,
+                        ),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                       child: CupertinoButton(
                         onPressed: () {
                           _showAlertDialog(
@@ -81,12 +96,12 @@ class CupertinoTabBarExample extends StatelessWidget {
   void _showAlertDialog(BuildContext context, String message) {
     showCupertinoDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (context) {
         return CupertinoAlertDialog(
           content: Text(message),
           actions: <Widget>[
             CupertinoDialogAction(
-              child: const Text("OK"),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
@@ -96,12 +111,4 @@ class CupertinoTabBarExample extends StatelessWidget {
       },
     );
   }
-}
-
-double _columnWidth(context, {columns = 2}) {
-  var mediaQueryData = MediaQuery.of(context);
-  var width = Orientation.portrait == mediaQueryData.orientation
-      ? mediaQueryData.size.shortestSide
-      : mediaQueryData.size.longestSide;
-  return width / columns;
 }
