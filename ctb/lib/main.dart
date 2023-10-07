@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-/// Flutter code sample for [CupertinoTabBar].
+/// Flutter [CupertinoTabBar] app with a [ListView] inside a [NestedScrollView]
+/// with [CupertinoSliverNavigationBar] support.
 
 void main() => runApp(const CupertinoTabBarApp());
 
@@ -36,25 +37,40 @@ class CupertinoTabBarExample extends StatelessWidget {
       tabBuilder: (context, tabIndex) {
         return CupertinoTabView(
           builder: (context) {
-            return ListView.builder(
-              itemCount: 100,
-              itemBuilder: (context, itemIndex) {
-                return SizedBox(
-                  width: _columnWidth(context),
-                  child: CupertinoButton(
-                    onPressed: () {
-                      _showAlertDialog(
-                        context,
-                        'Tapped TabBarItem $tabIndex, ListVeiw item $itemIndex',
-                      );
-                    },
-                    child: Text(
-                      'TabBarItem $tabIndex, ListVeiw item $itemIndex',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                );
+            return NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) {
+                return [
+                  const CupertinoSliverNavigationBar(
+                    largeTitle: Text('List'),
+                  )
+                ];
               },
+              body: NotificationListener<ScrollNotification>(
+                onNotification: (notification) {
+                  return (notification.metrics.pixels ==
+                      notification.metrics.maxScrollExtent);
+                },
+                child: ListView.builder(
+                  itemCount: 100,
+                  itemBuilder: (context, itemIndex) {
+                    return SizedBox(
+                      width: _columnWidth(context),
+                      child: CupertinoButton(
+                        onPressed: () {
+                          _showAlertDialog(
+                            context,
+                            'Tapped TabBarItem $tabIndex, ListVeiw item $itemIndex',
+                          );
+                        },
+                        child: Text(
+                          'TabBarItem $tabIndex, ListVeiw item $itemIndex',
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             );
           },
         );
